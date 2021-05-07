@@ -2,6 +2,9 @@ package boardgame;
 
 public class Position {
 	
+	/*
+	 * Esta classe é a entidade posição, com sesu atributos de linha e coluna.
+	 */
 	private int row;
 	private int column;
 	
