@@ -53,6 +53,22 @@ public class Board {
 		pieces[position.getRow()][position.getColumn()] = piece;
 		piece.position = position;
 	}
+	
+	//Método responsável por remover a peça do tabuleiro
+	public Piece removePiece(Position position) {
+		if(!positionExists(position)) {
+			throw new BoardException("Position not is on the board");
+		}
+		
+		if(piece(position) == null) {
+			return null;
+		}
+		
+		Piece backupPiece = piece(position);
+		backupPiece.position = null;
+		pieces.clone()[position.getRow()][position.getColumn()] = null;
+		return backupPiece;
+	}
 
 	/*
 	 * Método para sabermos quando uma posição em uma dada linha e coluna existe
