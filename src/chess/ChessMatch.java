@@ -44,6 +44,7 @@ public class ChessMatch {
 		Position source = sourcePosition.toPosition();
 		Position target = targetPosition.toPosition();
 		validateSourcePosition(source);
+		validateTargetPosition(source,target);
 		Piece capturedPiece = makeMove(source, target);
 
 		return (ChessPiece) capturedPiece;
@@ -56,6 +57,13 @@ public class ChessMatch {
 		}
 		if (!board.piece(position).isThereAnyPossibleMovie()) {
 			throw new ChessException("There is no possible movies for the chosen piece");
+		}
+	}
+	
+	//Aqui verificamos se a peça de origem não é uma posição de destino possível, eu não posso mover para lá
+	private void validateTargetPosition(Position source,Position target) {
+		if(!board.piece(source).possibleMovie(target)) {
+			throw new ChessException("The chosen piece can't move to target position");
 		}
 	}
 
