@@ -8,7 +8,7 @@ import boardgame.Piece;
  * da classe Piece, pois também possui acesso ao tabuleiro, locomovendo-se por ele.
  */
 
-public class ChessPiece extends Piece{
+public abstract class ChessPiece extends Piece{
 	
 	private Color color;
 
