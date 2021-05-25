@@ -60,7 +60,19 @@ public class UI {
 		for (int line = 0; line < pieces.length; line++) {
 			System.out.print((8 - line) + " ");
 			for (int column = 0; column < pieces.length; column++) {
-				printPiece(pieces[line][column]);
+				printPiece(pieces[line][column], false);
+			}
+			System.out.println();
+		}
+		System.out.println("  a b c d e f g h");
+
+	}
+
+	public static void printBoard(ChessPiece[][] pieces, boolean[][] possibleMoves) {
+		for (int line = 0; line < pieces.length; line++) {
+			System.out.print((8 - line) + " ");
+			for (int column = 0; column < pieces.length; column++) {
+				printPiece(pieces[line][column], possibleMoves[line][column]);
 			}
 			System.out.println();
 		}
@@ -72,9 +84,12 @@ public class UI {
 	 * Este método auxiliar é responsável por fazer a impressão da peça, caso ela
 	 * seja nula, faz a impressão o traço "-"
 	 */
-	private static void printPiece(ChessPiece piece) {
+	private static void printPiece(ChessPiece piece, boolean background) {
+		if (background) {
+			System.out.print(ANSI_GREEN_BACKGROUND);
+		}
 		if (piece == null) {
-			System.out.print("-");
+			System.out.print("-" + ANSI_RESET);
 		} else {
 			if (piece.getColor() == Color.WHITE) {
 				System.out.print(ANSI_WHITE + piece + ANSI_RESET);
