@@ -23,11 +23,18 @@ public abstract class ChessPiece extends Piece {
 		return color;
 	}
 
-	/*Este método verifica se a peça que está no tabuleiro é de um oponente ou não.
-	 * Criamos uma variável do tipo ChessPiece e verificamos se a posição é diferente de nula e se a cor da peça é diferente da nossa.
-	*/
+	// Método para retornar a posição da peça no tabuleiro "Ex: c2"
+	public ChessPosition getChessPosition() {
+		return ChessPosition.fromPosition(position);
+	}
+
+	/*
+	 * Este método verifica se a peça que está no tabuleiro é de um oponente ou não.
+	 * Criamos uma variável do tipo ChessPiece e verificamos se a posição é
+	 * diferente de nula e se a cor da peça é diferente da nossa.
+	 */
 	protected boolean isThereOpponentPiece(Position position) {
-		ChessPiece p = (ChessPiece)getBoard().piece(position);
+		ChessPiece p = (ChessPiece) getBoard().piece(position);
 		return p != null && p.getColor() != color;
 	}
 

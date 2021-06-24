@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import boardgame.Board;
 import boardgame.Piece;
@@ -19,7 +20,8 @@ public class ChessMatch {
 	private Board board;
 	private int turn;
 	private Color currentPlayer;
-	
+	private boolean check;
+
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
 	private List<Piece> capturedPieces = new ArrayList<>();
 
@@ -36,6 +38,10 @@ public class ChessMatch {
 
 	public Color getCurrentPlayer() {
 		return this.currentPlayer;
+	}
+	
+	public boolean getCheck() {
+		return check;
 	}
 
 	/*
@@ -65,7 +71,7 @@ public class ChessMatch {
 		return board.piece(position).possibleMoves();
 	}
 
-	//Metodo responsável por validar e performar os movimentos e posições.
+	// Metodo responsável por validar e performar os movimentos e posições.
 	public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
 
 		Position source = sourcePosition.toPosition();
@@ -73,6 +79,14 @@ public class ChessMatch {
 		validateSourcePosition(source);
 		validateTargetPosition(source, target);
 		Piece capturedPiece = makeMove(source, target);
+
+		if (testCheck(currentPlayer)) {
+			undoMove(source, target, capturedPiece);
+			throw new ChessException("You can't put yourself in check");
+		}
+
+		check = (testCheck(opponent(currentPlayer))) ? true : false;
+
 		nextTurn();
 
 		return (ChessPiece) capturedPiece;
@@ -101,7 +115,8 @@ public class ChessMatch {
 		}
 	}
 
-	//Método responsável por troca o "turno", ou seja, qual jogador deve jogar após o outro ter jogado
+	// Método responsável por troca o "turno", ou seja, qual jogador deve jogar após
+	// o outro ter jogado
 	private void nextTurn() {
 		turn++;
 		currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
@@ -111,13 +126,25 @@ public class ChessMatch {
 		Piece piece = board.removePiece(source);
 		Piece capturedPiece = board.removePiece(target);
 		board.placePiece(piece, target);
-		
-		if(capturedPiece != null) {
+
+		if (capturedPiece != null) {
 			piecesOnTheBoard.remove(capturedPiece);
 			capturedPieces.add(capturedPiece);
 		}
 
 		return capturedPiece;
+	}
+
+	// Método para desfazer o movimento, caso não seja permitido
+	private void undoMove(Position source, Position target, Piece capturedPiece) {
+		Piece p = board.removePiece(target);
+		board.placePiece(p, source);
+
+		if (capturedPiece != null) {
+			board.placePiece(capturedPiece, target);
+			capturedPieces.remove(capturedPiece);
+			piecesOnTheBoard.add(capturedPiece);
+		}
 	}
 
 	/*
@@ -130,8 +157,37 @@ public class ChessMatch {
 		piecesOnTheBoard.add(piece);
 	}
 
-	// Método responsável por inserir as peças no tabuleiro e iniciar o jogo
+	private Color opponent(Color color) {
+		return (color == Color.WHITE) ? Color.BLACK : Color.WHITE;
+	}
 
+	private ChessPiece king(Color color) {
+		List<Piece> list = piecesOnTheBoard.stream().filter(p -> ((ChessPiece) p).getColor() == color)
+				.collect(Collectors.toList());
+		for (Piece p : list) {
+			if (p instanceof King) {
+				return (ChessPiece) p;
+			}
+		}
+		throw new IllegalStateException("there is no " + color + " king on the board");
+	}
+
+	// Este método verifica todos os movimentos possíveis das peças do adversário,
+	// ação necessária para verificar se o rei está em check
+	private boolean testCheck(Color color) {
+		Position kingPosition = king(color).getChessPosition().toPosition();
+		List<Piece> opponentPieces = piecesOnTheBoard.stream()
+				.filter(p -> ((ChessPiece) p).getColor() == opponent(color)).collect(Collectors.toList());
+		for (Piece p : opponentPieces) {
+			boolean[][] mat = p.possibleMoves();
+			if (mat[kingPosition.getRow()][kingPosition.getColumn()]) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// Método responsável por inserir as peças no tabuleiro e iniciar o jogo
 	private void initialSetup() {
 		placeNewPiece('c', 1, new Rook(board, Color.WHITE));
 		placeNewPiece('c', 2, new Rook(board, Color.WHITE));
