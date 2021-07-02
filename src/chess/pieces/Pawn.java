@@ -5,7 +5,7 @@ import boardgame.Position;
 import chess.ChessPiece;
 import chess.Color;
 
-//Esta classe representa a peça Peão do jogo
+//Esta classe representa a peça Peão do jogo de xadrez
 
 public class Pawn extends ChessPiece {
 
