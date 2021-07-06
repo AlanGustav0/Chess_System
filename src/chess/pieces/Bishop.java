@@ -5,7 +5,7 @@ import boardgame.Position;
 import chess.ChessPiece;
 import chess.Color;
 
-//Esta classe representa a peça Torre do jogo
+//Esta classe representa a peça Bispo do jogo
 
 public class Bishop extends ChessPiece {
 
