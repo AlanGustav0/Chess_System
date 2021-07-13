@@ -38,11 +38,17 @@ public class Program {
 				if (capturedPiece != null) {
 					captured.add(capturedPiece);
 				}
-
+				
+				//Aqui verificamos se a peça foi ou não promovida, chegou do outro lado do tabuleiro
 				if (chessMatch.getPromoted() != null) {
-					System.out.print("Enter piece for prmotion (B/N/R/Q): ");
-					String type = sc.nextLine();
-					chessMatch.replacePromotedPiece(type.toUpperCase());
+					System.out.print("Enter piece for promotion (B/N/R/Q): ");
+					String type = sc.nextLine().toUpperCase();
+					while (!type.equals("B") && !type.equals("N") && !type.contentEquals("R")
+							&& !type.contentEquals("Q")) {
+						System.out.print("Invalid piece type! Please enter piece for promotion (B/N/R/Q): ");
+						type = sc.nextLine().toUpperCase();
+					}
+					chessMatch.replacePromotedPiece(type);
 				}
 
 			} catch (ChessException e) {
