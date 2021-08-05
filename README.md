@@ -11,7 +11,7 @@
 
 #### Resultado do projeto
 
-![alt text](https://github.com/AlanGustav0/Chess_System/blob/master/board_image.JPG)
+![Program exemple](https://github.com/AlanGustav0/Chess_System/blob/master/board_image.JPG)
 
 
 
